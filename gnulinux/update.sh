@@ -35,7 +35,7 @@ PXELINUX0="ftp://ftp.fr.debian.org/debian/dists/testing/main/installer-i386/curr
 # recreate from scratch the conffile
 # (always one x86 rescue option with debian stable first)
 CONFFILE="../pxelinux.cfg/default"
-echo "DEFAULT rescue " > $CONFFILE
+echo "DEFAULT rescue-x86 " > $CONFFILE
 echo >> $CONFFILE
 echo "LABEL rescue-x86" >> $CONFFILE
 echo "      kernel gnulinux/stable-i386-linux" >> $CONFFILE

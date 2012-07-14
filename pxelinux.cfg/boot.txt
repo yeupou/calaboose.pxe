@@ -1,4 +1,10 @@
-- Boot Menu -
-=============
+You are about to install some gnus over network...
+==================================================
+(or at least being rescued)
 
-POUEET !
+I really have no idea of anything useful to put it there. Would the
+following be okay by you?
+
+"Tracy: If you get rich off this stuff, just take care of my family. I
+don't want my kids to have to go to college."
+

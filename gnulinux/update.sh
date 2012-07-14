@@ -18,8 +18,11 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 #   USA
 
+# do `export NO_WGET=1` if you want it do skip downloading files.
+
 BOOT_OPTS="vga=normal"
- 
+[ $NO_WGET ] && echo "NO_WGET is exported so we won't download required files."
+
 # cd in the directory where this script resides, even if called from a symlink
 # in /etc/cron.whatever/
 ZERO=$0
@@ -35,7 +38,8 @@ PXELINUX0="ftp://ftp.fr.debian.org/debian/dists/testing/main/installer-i386/curr
 # recreate from scratch the conffile
 # (always one x86 rescue option with debian stable first)
 CONFFILE="../pxelinux.cfg/default"
-echo "DEFAULT rescue-x86 " > $CONFFILE
+echo "DISPLAY boot.txt" > $CONFFILE
+echo "DEFAULT rescue-x86 " >> $CONFFILE
 echo >> $CONFFILE
 echo "LABEL rescue-x86" >> $CONFFILE
 echo "      kernel gnulinux/stable-i386-linux" >> $CONFFILE
@@ -46,8 +50,8 @@ for dist in $DISTS; do
     for arch in $ARCHS; do 
 	system=`echo $dist | sed s@dists.*@@`
 	system=`basename $system`
-	wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/initrd.gz -O `basename $dist`-$arch-initrd.gz
-	wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/linux -O `basename $dist`-$arch-linux
+	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/initrd.gz -O `basename $dist`-$arch-initrd.gz
+	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/linux -O `basename $dist`-$arch-linux
 	echo >> $CONFFILE
 	echo "LABEL $system-`basename $dist`-$arch" >> $CONFFILE
 	echo "      kernel gnulinux/`basename $dist`-$arch-linux" >> $CONFFILE
@@ -55,7 +59,11 @@ for dist in $DISTS; do
     done
 done
 
+echo >> $CONFFILE
+echo "PROMPT 1" >> $CONFFILE
+echo "TIMEOUT 0" >> $CONFFILE
+
 # finaly, make sure we have the latest pxelinux.0 we can get
-wget --quiet $PXELINUX0 -O ../pxelinux.0
+[ ! $NO_WGET ] && wget --quiet $PXELINUX0 -O ../pxelinux.0
 
 # EOF

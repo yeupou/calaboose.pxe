@@ -1,6 +1,6 @@
 This is setup to use ethernet cards "boot on lan" feature with Debian netboot.
 It is shamefully based on http://www.debian-administration.org/articles/478 
-and advertised at 
+and advertised at http://yeupou.wordpress.com/2012/05/29/having-homemade-aliases-functions-and-such-available-to-every-interactive-shells/
 
 
 To set this up:

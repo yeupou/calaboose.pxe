@@ -1,5 +1,6 @@
 This is setup to use ethernet cards "boot on lan" feature with Debian netboot.
 It is shamefully based on http://www.debian-administration.org/articles/478 
+and advertised at 
 
 
 To set this up:
@@ -7,9 +8,9 @@ To set this up:
 
 On the server (you have a home server, right? *plonk*), 
 
-Put this directory somewhere clever, like /srv/pxe for insdtance (yes, that's what I did; but you can put it in /opt/my/too/long/path/i/cannot/remember if you really really want).
+Put this directory somewhere clever, like /srv/pxe for instance (yes, that's what I did; but you can put it in /opt/my/too/long/path/i/cannot/remember if you really really want).
 
-Run the gnulinux/update.sh script to get necessary kernels and initrd. By default, it fetches debian and ubuntu stuff. If it went well, you should have several *-linux and *-initrd.gz files in gnulinux/ plus a file name default inside pxelinux.cfg/
+Run the gnulinux/update.sh script to get kernels and initrds. By default, it fetches debian and ubuntu stuff. If it went well, you should have several *-linux and *-initrd.gz files in gnulinux/ plus a generated file named default inside pxelinux.cfg/
 You may add a symlink to this script inside /etc/cron.monthly so you keep stuff up-to-date.
 
 Then, you must install a "Trivial FTP Daemon" on you local server which will, in the context of PXE (Preboot Execution Environment), serve these files you just got:
@@ -36,7 +37,7 @@ To use it:
 
 On your client,
 
-Go in the BIOS, look for "boot on lan" and whatever crap it may be called (it varies), activate it. Then boot. It'll do some DHCP magic to find the path to the PXE and the menu should be printed on your screen at some point. 
+Go in the BIOS, look for "boot on lan" and whatever crap it may be called (it varies greatly), activate it. Then boot. It'll do some DHCP magic to find the path to the PXE and the menu should be printed on your screen at some point. 
 
 
 # EOF

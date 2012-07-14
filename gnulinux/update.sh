@@ -38,7 +38,7 @@ PXELINUX0="ftp://ftp.fr.debian.org/debian/dists/testing/main/installer-i386/curr
 # recreate from scratch the conffile
 # (always one x86 rescue option with debian stable first)
 CONFFILE="../pxelinux.cfg/default"
-echo "DISPLAY boot.txt" > $CONFFILE
+echo "DISPLAY pxelinux.cfg/boot.txt" > $CONFFILE
 echo "DEFAULT rescue-x86 " >> $CONFFILE
 echo >> $CONFFILE
 echo "LABEL rescue-x86" >> $CONFFILE
@@ -63,7 +63,7 @@ echo >> $CONFFILE
 echo "PROMPT 1" >> $CONFFILE
 echo "TIMEOUT 0" >> $CONFFILE
 
-# finaly, make sure we have the latest pxelinux.0 we can get
+# finaly, make sure we have the latest bootstrap program we can get
 [ ! $NO_WGET ] && wget --quiet $PXELINUX0 -O ../pxelinux.0
 
 # EOF

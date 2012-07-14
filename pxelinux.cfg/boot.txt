@@ -2,9 +2,10 @@ You are about to install some gnus over network...
 ==================================================
 (or at least being rescued)
 
-I really have no idea of anything useful to put it there. Would the
-following be okay by you?
+I really have no idea of anything useful to write here. Would the
+following be okay by you:
+    "Tracy: If you get rich off this stuff, just take care of my 
+    family. I don't want my kids to have to go to college."
 
-"Tracy: If you get rich off this stuff, just take care of my family. I
-don't want my kids to have to go to college."
+>>> Type TAB like a psycho to get a list of available kernels) <<<
 

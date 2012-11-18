@@ -33,37 +33,31 @@ cd `dirname $ZERO`
 # (yes, this is debian-specific, feel free to modify/improve)
 DISTS="ftp://ftp.fr.debian.org/debian/dists/stable ftp://ftp.fr.debian.org/debian/dists/testing http://archive.ubuntu.com/ubuntu/dists/precise"
 ARCHS="i386 amd64"
-PXELINUX0="ftp://ftp.fr.debian.org/debian/dists/testing/main/installer-i386/current/images/netboot/pxelinux.0"
 
-# recreate from scratch the conffile
-# (always one x86 rescue option with debian stable first)
-CONFFILE="../pxelinux.cfg/default"
-echo "DISPLAY pxelinux.cfg/boot.txt" > $CONFFILE
-echo "DEFAULT rescue-x86 " >> $CONFFILE
-echo >> $CONFFILE
-echo "LABEL rescue-x86" >> $CONFFILE
-echo "      kernel gnulinux/stable-i386-linux" >> $CONFFILE
-echo "      append $BOOT_OPTS irqpoll initrd=gnulinux/stable-i386-initrd.gz rescue/enable=true  --" >> $CONFFILE
+# recreate the ipxe-boot file
+echo "#!ipxe" > ipxe-boot
 
-# download images and update the conffile
+MENU=""
+
+# download images and update the labels
 for dist in $DISTS; do
     for arch in $ARCHS; do 
 	system=`echo $dist | sed s@dists.*@@`
 	system=`basename $system`
 	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/initrd.gz -O `basename $dist`-$arch-initrd.gz
 	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/linux -O `basename $dist`-$arch-linux
-	echo >> $CONFFILE
-	echo "LABEL $system-`basename $dist`-$arch" >> $CONFFILE
-	echo "      kernel gnulinux/`basename $dist`-$arch-linux" >> $CONFFILE
-	echo "      append $BOOT_OPTS initrd=gnulinux/`basename $dist`-$arch-initrd.gz --" >> $CONFFILE
+	echo ":$system-`basename $dist`-$arch" >> ipxe-boot
+	echo "kernel GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
+	echo "initrd GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
+	echo "boot" >> ipxe-boot
+	MENU="$MENU\nitem $system-`basename $dist`-$arch `echo $system | tr a-z A-Z` `basename $dist` $arch"
     done
 done
 
-echo >> $CONFFILE
-echo "PROMPT 1" >> $CONFFILE
-echo "TIMEOUT 0" >> $CONFFILE
-
-# finaly, make sure we have the latest bootstrap program we can get
-[ ! $NO_WGET ] && wget --quiet $PXELINUX0 -O ../pxelinux.0
+# add the menu lines
+echo "menu GNU/Linux boot images" >> ipxe-boot
+echo -e "$MENU" >> ipxe-boot
+echo "choose target && goto \${target}" >> ipxe-boot
+echo "# EOF" >> ipxe-boot
 
 # EOF

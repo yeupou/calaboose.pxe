@@ -3,6 +3,7 @@ It is shamefully based on http://www.debian-administration.org/articles/478
 and advertised at http://yeupou.wordpress.com/2012/05/29/having-homemade-aliases-functions-and-such-available-to-every-interactive-shells/
 
 
+
 To set this up:
 ---------------
 
@@ -10,7 +11,9 @@ On the server (you have a home server, right? *plonk*),
 
 Put this directory somewhere clever, like /srv/pxe for instance (yes, that's what I did; but you can put it in /opt/my/too/long/path/i/cannot/remember if you really really want).
 
-Run the gnulinux/update.sh script to get kernels and initrds. By default, it fetches debian and ubuntu stuff. If it went well, you should have several *-linux and *-initrd.gz files in gnulinux/ plus a generated file named default inside pxelinux.cfg/
+Run the ipxe-boot-update.sh main script. It will build up ipxe-boot config files and (by default) download GNULinux kernels and initrd.
+(It will run any additional ipxe-boot-update.sh that you may add in subdirectories. See the one in GNULinux as example)
+
 You may add a symlink to this script inside /etc/cron.monthly so you keep stuff up-to-date.
 
 Then, you must install a "Trivial FTP Daemon" on you local server which will, in the context of PXE (Preboot Execution Environment), serve these files you just got:
@@ -18,14 +21,25 @@ Then, you must install a "Trivial FTP Daemon" on you local server which will, in
       update-rc.d tftpd-hpa defaults
 Edit /etc/default/tftpd-hpa, especially TFTP_DIRECTORY setting (you know, /opt/my/what/the/...).
 
+We'll, instead of using the basic PXE stuff, use iPXE by chainloading it.
+(We could apt-get ipxe but the current version in Debian does not support useful commands like menu or cpuid) We'll simply do:
+       cd /srv/pxe
+       wget http://boot.ipxe.org/undionly.kpxe
+
 Finally, you must update your DHCP Daemon so it advertises we're running PXE (filename and next-server options). With ISC dhcpd, in /etc/dhcp/dhcpd.conf, for my subnet, I have now:
-      subnet 192.168.1.0 netmask 255.255.255.0 {
+ subnet 192.168.1.0 netmask 255.255.255.0 {
         range 192.168.1.100 192.168.1.200;
-	
-	# PXE / boot on lan
-	filename "pxelinux.0";
+
+	# iPXE
+	if exists user-class and option user-class = "iPXE" {
+	    filename "ipxe-boot";
+	} else {
+    	    filename "undionly.kpxe";
+  	}
 	next-server 192.168.1.1;
-      }
+ }
+
+
 
 Obviously, you wont forget to do:
       invoke-rc.d isc-dhcp-server restart
@@ -38,6 +52,8 @@ To use it:
 On your client,
 
 Go in the BIOS, look for "boot on lan" and whatever crap it may be called (it varies greatly), activate it. Then boot. It'll do some DHCP magic to find the path to the PXE and the menu should be printed on your screen at some point. 
+
+
 
 
 # EOF

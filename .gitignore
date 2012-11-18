@@ -1,3 +1,5 @@
 *~
 win
 pxelinux.0
+ipxe-boot
+undionly.kpxe

@@ -21,6 +21,12 @@
 # do `export NO_WGET=1` if you want it do skip downloading files.
 
 BOOT_OPTS="vga=normal"
+
+# Use the following if you want to provide access to these over http
+# instead of tftp or any other relevant protocol, assuming you set up
+# the relevant server to serve these
+#PREFIX=http://URL/pxe/
+
 [ $NO_WGET ] && echo "NO_WGET is exported so we won't download required files."
 
 # cd in the directory where this script resides, even if called from a symlink
@@ -47,8 +53,8 @@ for dist in $DISTS; do
 	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/initrd.gz -O `basename $dist`-$arch-initrd.gz
 	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/linux -O `basename $dist`-$arch-linux
 	echo ":$system-`basename $dist`-$arch" >> ipxe-boot
-	echo "kernel GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
-	echo "initrd GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
+	echo kernel $PREFIX"GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
+	echo initrd $PREFIX"GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
 	echo "boot" >> ipxe-boot
 	MENU="$MENU\nitem $system-`basename $dist`-$arch `echo $system | tr a-z A-Z` `basename $dist` $arch"
     done
@@ -59,5 +65,9 @@ echo "menu GNU/Linux boot images" >> ipxe-boot
 echo -e "$MENU" >> ipxe-boot
 echo "choose target && goto \${target}" >> ipxe-boot
 echo "# EOF" >> ipxe-boot
+
+# provide rescue symlinks
+if [ ! -e rescue-linux ]; then ln -s stable-i386-linux rescue-linux; fi
+if [ ! -e rescue-initrd.gz ]; then ln -s stable-i386-initrd.gz rescue-initrd.gz; fi
 
 # EOF

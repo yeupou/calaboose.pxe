@@ -46,6 +46,7 @@ Obviously, you wont forget to do:
       invoke-rc.d tftpd-hpa start
 
 
+
 To use it:
 ----------
 
@@ -54,6 +55,15 @@ On your client,
 Go in the BIOS, look for "boot on lan" and whatever crap it may be called (it varies greatly), activate it. Then boot. It'll do some DHCP magic to find the path to the PXE and the menu should be printed on your screen at some point. 
 
 
+Further...:
+-----------
+
+You can decide to use http instead of tftpd for faster file transfer once
+ iPXE is loaded (which means tfpd will still be necessary tough).
+
+For instance, you can run 
+    export PREFIX=http://URL/pxe/
+before starting the ipxe-boot-update.sh script.
 
 
 # EOF

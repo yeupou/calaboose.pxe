@@ -18,19 +18,20 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 #   USA
 
-# basic warning check: does undionly.kpxe exists?
+# cd in the directory where this script resides, even if called from a symlink
+# in /etc/cron.whatever/
+ZERO=$0
+if [ -L $0 ]; then ZERO=`readlink $0`; fi
+cd `dirname $ZERO`
+
+
+# basic warning check: does undionly.kpxe exists? 
 IPXE_CHAINLOADER=undionly.kpxe
 if [ ! -e $IPXE_CHAINLOADER ]; then
     echo "Did you notice that $IPXE_CHAINLOADER was not there?"
     read
     wget http://boot.ipxe.org/$IPXE_CHAINLOADER
 fi
-
-# cd in the directory where this script resides, even if called from a symlink
-# in /etc/cron.whatever/
-ZERO=$0
-if [ -L $0 ]; then ZERO=`readlink $0`; fi
-cd `dirname $ZERO`
 
 # assume each subdirectory in here may contain relevant images
 # if an update script exists, run it
@@ -78,6 +79,7 @@ for subdir in *; do
     fi
 done
 echo ":rescue" >> ipxe-boot
+echo "# fallback with tftpd" >> ipxe-boot
 echo "kernel GNULinux/rescue-linux vga=normal irqpoll rescue/enable=true" >> ipxe-boot
 echo "initrd GNULinux/rescue-initrd.gz" >> ipxe-boot
 echo "boot"  >> ipxe-boot

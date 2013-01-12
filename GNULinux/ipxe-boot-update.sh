@@ -56,7 +56,7 @@ for dist in $DISTS; do
 	echo kernel $PREFIX"GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
 	echo initrd $PREFIX"GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
 	echo "boot" >> ipxe-boot
-	MENU="$MENU\nitem $system-`basename $dist`-$arch `echo $system | tr a-z A-Z` `basename $dist` $arch"
+	MENU="$MENU\nitem $system-`basename $dist`-$arch Install `echo $system | tr a-z A-Z` `basename $dist` $arch"
     done
 done
 
@@ -67,7 +67,11 @@ echo "choose target && goto \${target}" >> ipxe-boot
 echo "# EOF" >> ipxe-boot
 
 # provide rescue symlinks
-if [ ! -e rescue-linux ]; then ln -s stable-i386-linux rescue-linux; fi
-if [ ! -e rescue-initrd.gz ]; then ln -s stable-i386-initrd.gz rescue-initrd.gz; fi
+if [ ! -e rescue-i386-linux ]; then ln -s stable-i386-linux rescue-i386-linux; fi
+if [ ! -e rescue-i386-initrd.gz ]; then ln -s stable-i386-initrd.gz rescue-i386-initrd.gz; fi
+if [ ! -e rescue-amd64-linux ]; then ln -s stable-amd64-linux rescue-amd64-linux; fi
+if [ ! -e rescue-amd64-initrd.gz ]; then ln -s stable-amd64-initrd.gz rescue-amd64-initrd.gz; fi
+
+
 
 # EOF

@@ -59,9 +59,8 @@ for subdir in *; do
 done
 
 echo "item --gap -- --- Generic options ---" >> ipxe-boot
-if [ -e GNULinux/rescue-linux ]; then
-    echo "item --key r rescue Boot (i386) rescue image" >> ipxe-boot
-fi
+if [ -e GNULinux/rescue-i386-linux ]; then echo "item --key r rescue Boot rescue i386" >> ipxe-boot; fi
+if [ -e GNULinux/rescue-amd64-linux ]; then echo "item --key r rescue Boot rescue amd64" >> ipxe-boot; fi
 echo "item --key c config Configure iPXE settings" >> ipxe-boot
 echo "item --key s shell Drop to iPXE shell" >> ipxe-boot
 echo "item --key x exit Exit and continue BIOS boot" >> ipxe-boot

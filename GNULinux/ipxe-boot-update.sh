@@ -37,7 +37,9 @@ cd `dirname $ZERO`
 
 # list of distros we want to provide
 # (yes, this is debian-specific, feel free to modify/improve)
-DISTS="ftp://ftp.fr.debian.org/debian/dists/stable ftp://ftp.fr.debian.org/debian/dists/testing http://archive.ubuntu.com/ubuntu/dists/precise"
+DISTS="testing http://ftp.fr.debian.org/debian/dists/stable http://archive.ubuntu.com/ubuntu/dists/precise"
+# dont know when but the previous line no longer works for debian testing
+# so we ll just daily images instead
 ARCHS="i386 amd64"
 
 # recreate the ipxe-boot file
@@ -50,8 +52,16 @@ for dist in $DISTS; do
     for arch in $ARCHS; do 
 	system=`echo $dist | sed s@dists.*@@`
 	system=`basename $system`
-	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/initrd.gz -O `basename $dist`-$arch-initrd.gz
-	[ ! $NO_WGET ] && wget --quiet $dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/linux -O `basename $dist`-$arch-linux
+	if [ $dist != "testing" ]; then
+	    url=$dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/
+	else 
+	    # specific handling of debian testing
+	    # as now there are only daily images available apparently
+	    url=http://d-i.debian.org/daily-images/$arch/daily/netboot/debian-installer/$arch/
+	    system=debian
+	fi
+	[ ! $NO_WGET ] && wget --quiet $url/initrd.gz -O `basename $dist`-$arch-initrd.gz
+	[ ! $NO_WGET ] && wget --quiet $url/linux -O `basename $dist`-$arch-linux
 	echo ":$system-`basename $dist`-$arch" >> ipxe-boot
 	echo kernel $PREFIX"GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
 	echo initrd $PREFIX"GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot

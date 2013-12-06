@@ -20,7 +20,7 @@
 
 # do `export NO_WGET=1` if you want it do skip downloading files.
 
-BOOT_OPTS="vga=normal"
+#BOOT_OPTS="vga=normal type=mfs_root"
 
 # Use the following if you want to provide access to these over http
 # instead of tftp or any other relevant protocol, assuming you set up
@@ -35,7 +35,7 @@ ZERO=$0
 if [ -L $0 ]; then ZERO=`readlink $0`; fi
 cd `dirname $ZERO`
 
-ARCHS="i386"
+ARCHS="kfreebsd-i386"
 
 # recreate the ipxe-boot file
 echo "#!ipxe" > ipxe-boot
@@ -45,14 +45,14 @@ MENU=""
 # download images and update the labels
 system=debian
 for arch in $ARCHS; do 
-    url=http://d-i.debian.org/daily-images/kfreebsd-$arch/daily/netboot-9/debian-installer/kfreebsd-$arch/
-    [ ! $NO_WGET ] && wget --quiet $url/initrd.gz -O `basename $dist`-$arch-initrd.gz
-    [ ! $NO_WGET ] && wget --quiet $url/kfreebsd-9.gz -O `basename $dist`-$arch-kfreebsd-9.gz
-    echo ":$system-`basename $dist`-$arch" >> ipxe-boot
-    echo kernel $PREFIX"GNUkFreeBSD/`basename $dist`-$arch-kfreebsd-9.gz $BOOT_OPTS" >> ipxe-boot
-    echo initrd $PREFIX"GNUkFreeBSD/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
+    url=http://ftp.fr.debian.org/debian/dists/stable/main/installer-$arch/current/images/netboot/debian-installer/$arch
+    [ ! $NO_WGET ] && wget --quiet  $url/initrd.gz -O $system-$arch-initrd.gz
+    [ ! $NO_WGET ] && wget --quiet $url/kfreebsd.gz -O $system-$arch-kfreebsd.gz
+    [ ! $NO_WGET ] && wget --quiet $url/grub2pxe -O $system-$arch-grub2pxe
+    echo ":$system-$arch" >> ipxe-boot
+    echo chain $PREFIX"GNUkFreeBSD/$system-$arch-grub2pxe --config-file==\"kfreebsd "$PREFIX"GNUkFreeBSD/$system-$arch-kfreebsd.gz; kfreebsd_module "$PREFIX"GNUkFreeBSD/$system-$arch-initrd.gz type=mfs_root\"" >> ipxe-boot
     echo "boot" >> ipxe-boot
-    MENU="$MENU\nitem $system-`basename $dist`-$arch Install `echo $system | tr a-z A-Z` `basename $dist` $arch"
+    MENU="$MENU\nitem $system-$arch Install `echo $system | tr a-z A-Z` $arch"
 done
 
 

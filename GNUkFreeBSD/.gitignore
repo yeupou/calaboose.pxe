@@ -1,3 +1,2 @@
-*.gz
-*grub2pxe
 ipxe-boot
+kfreebsd-*

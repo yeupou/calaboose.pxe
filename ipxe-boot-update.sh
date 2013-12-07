@@ -36,6 +36,7 @@ fi
 # assume each subdirectory in here may contain relevant images
 # if an update script exists, run it
 for subdir in *; do
+    if [ -L $subdir ]; then continue; fi
     if [ -x $subdir/ipxe-boot-update.sh ]; then
 	$subdir/ipxe-boot-update.sh
     fi	
@@ -50,6 +51,7 @@ echo "######### CHOICES" >> ipxe-boot
 echo ":mainmenu" >> ipxe-boot
 echo "menu \${net0/domain} PXE - \${arch} CPU detected" >> ipxe-boot
 for subdir in *; do
+    if [ -L $subdir ]; then continue; fi
     # if there is a config file for this subdir, strip the menu part of it
     # (any line with item)
     if [ -r $subdir/ipxe-boot ]; then 
@@ -71,6 +73,7 @@ echo "shell" >> ipxe-boot
 
 echo "######### BOOTING" >> ipxe-boot
 for subdir in *; do
+    if [ -L $subdir ]; then continue; fi
     # if there is a config file for this subdir, 
     # add the labels it contains
     if [ -r $subdir/ipxe-boot ]; then

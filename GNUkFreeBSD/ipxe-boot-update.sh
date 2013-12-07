@@ -49,10 +49,10 @@ system=debian
 for arch in $ARCHS; do 
     mkdir -p $arch
     url=http://ftp.fr.debian.org/debian/dists/stable/main/installer-$arch/current/images/netboot/debian-installer/$arch
-    [ ! $NO_WGET ] && wget --quiet  $url/initrd.gz -O $arch/initrd.gz
-    [ ! $NO_WGET ] && wget --quiet $url/kfreebsd.gz -O $arch/kfreebsd.gz
-    [ ! $NO_WGET ] && wget --quiet $url/grub2pxe -O $arch/grub2pxe
-    [ ! $NO_WGET ] && wget --quiet $url/grub.cfg -O $arch/grub.cfg
+    [ ! $NO_WGET ] && wget --timestamping --quiet  $url/initrd.gz -O $arch/initrd.gz
+    [ ! $NO_WGET ] && wget --timestamping --quiet $url/kfreebsd.gz -O $arch/kfreebsd.gz
+    [ ! $NO_WGET ] && wget --timestamping --quiet $url/grub2pxe -O $arch/grub2pxe
+    [ ! $NO_WGET ] && wget --timestamping --quiet $url/grub.cfg -O $arch/grub.cfg
     echo ":$system-$arch" >> ipxe-boot
     echo chain $PREFIX"GNUkFreeBSD/$arch/grub2pxe" >> ipxe-boot
     echo "boot" >> ipxe-boot

@@ -53,15 +53,15 @@ for dist in $DISTS; do
 	system=`echo $dist | sed s@dists.*@@`
 	system=`basename $system`
 	if [ $dist != "testing" ]; then
-	    url=$dist/main/installer-$arch/current/images/netboot/$system-installer/$arch/
+	    url=$dist/main/installer-$arch/current/images/netboot/$system-installer/$arch
 	else 
 	    # specific handling of debian testing
 	    # as now there are only daily images available apparently
-	    url=http://d-i.debian.org/daily-images/$arch/daily/netboot/debian-installer/$arch/
+	    url=http://d-i.debian.org/daily-images/$arch/daily/netboot/debian-installer/$arch
 	    system=debian
 	fi
-	[ ! $NO_WGET ] && wget --quiet $url/initrd.gz -O `basename $dist`-$arch-initrd.gz
-	[ ! $NO_WGET ] && wget --quiet $url/linux -O `basename $dist`-$arch-linux
+	[ ! $NO_WGET ] && wget --timestamping --quiet $url/initrd.gz -O `basename $dist`-$arch-initrd.gz
+	[ ! $NO_WGET ] && wget --timestamping --quiet $url/linux -O `basename $dist`-$arch-linux
 	echo ":$system-`basename $dist`-$arch" >> ipxe-boot
 	echo kernel $PREFIX"GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
 	echo initrd $PREFIX"GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot

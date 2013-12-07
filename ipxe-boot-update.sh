@@ -62,7 +62,7 @@ done
 
 echo "item --gap -- --- Generic options ---" >> ipxe-boot
 if [ -e GNULinux/rescue-i386-linux ]; then echo "item --key r rescue Boot rescue i386" >> ipxe-boot; fi
-if [ -e GNULinux/rescue-amd64-linux ]; then echo "item --key r rescue Boot rescue amd64" >> ipxe-boot; fi
+if [ -e GNULinux/rescue-amd64-linux ]; then echo "item --key t rescue-amd64 Boot rescue amd64" >> ipxe-boot; fi
 echo "item --key c config Configure iPXE settings" >> ipxe-boot
 echo "item --key s shell Drop to iPXE shell" >> ipxe-boot
 echo "item --key x exit Exit and continue BIOS boot" >> ipxe-boot
@@ -82,9 +82,14 @@ for subdir in *; do
 done
 echo ":rescue" >> ipxe-boot
 echo "# fallback with tftpd" >> ipxe-boot
-echo "kernel GNULinux/rescue-linux vga=normal irqpoll rescue/enable=true" >> ipxe-boot
-echo "initrd GNULinux/rescue-initrd.gz" >> ipxe-boot
+echo "kernel GNULinux/rescue-i386-linux vga=normal irqpoll rescue/enable=true" >> ipxe-boot
+echo "initrd GNULinux/rescue-i386-initrd.gz" >> ipxe-boot
 echo "boot"  >> ipxe-boot
+echo ":rescue-amd64" >> ipxe-boot
+echo "# same for amd64" >> ipxe-boot
+echo "kernel GNULinux/rescue-amd64-linux vga=norman irqpoll rescue/enable=true" >> ipxe-boot
+echo "initrd GNULinux/rescue-amd64-initrd.gz" >> ipxe-boot
+echo "boot" >> ipxe-boot
 echo ":config" >> ipxe-boot
 echo "config" >> ipxe-boot
 echo "goto mainmenu" >> ipxe-boot

@@ -37,7 +37,7 @@ cd `dirname $ZERO`
 # debian-installer as main directory. Create the symlink now if missing
 if [ ! -e ../debian-installer ]; then ln -s GNUkFreeBSD ../debian-installer; fi
 
-ARCHS="kfreebsd-i386"
+ARCHS="kfreebsd-i386 kfreebsd-amd64"
 
 # recreate the ipxe-boot file
 echo "#!ipxe" > ipxe-boot

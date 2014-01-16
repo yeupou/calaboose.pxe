@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012 Mathieu Roy <yeupou--gnu.org>
+# Copyright (c) 2012-2014 Mathieu Roy <yeupou--gnu.org>
 #           http://yeupou.wordpress.com
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ cd `dirname $ZERO`
 
 # list of distros we want to provide
 # (yes, this is debian-specific, feel free to modify/improve)
-DISTS="testing http://ftp.fr.debian.org/debian/dists/stable http://archive.ubuntu.com/ubuntu/dists/precise"
+DISTS="testing http://ftp.fr.debian.org/debian/dists/stable http://archive.ubuntu.com/ubuntu/dists/devel"
 # dont know when but the previous line no longer works for debian testing
 # so we ll just daily images instead
 ARCHS="i386 amd64"
@@ -60,11 +60,12 @@ for dist in $DISTS; do
 	    url=http://d-i.debian.org/daily-images/$arch/daily/netboot/debian-installer/$arch
 	    system=debian
 	fi
-	[ ! $NO_WGET ] && wget --timestamping --quiet $url/initrd.gz -O `basename $dist`-$arch-initrd.gz
-	[ ! $NO_WGET ] && wget --timestamping --quiet $url/linux -O `basename $dist`-$arch-linux
+	if [ ! -d $system/ ]; then mkdir -p $system; fi
+	[ ! $NO_WGET ] && wget --timestamping --quiet $url/initrd.gz -O $system/`basename $dist`-$arch-initrd.gz
+	[ ! $NO_WGET ] && wget --timestamping --quiet $url/linux -O $system/`basename $dist`-$arch-linux
 	echo ":$system-`basename $dist`-$arch" >> ipxe-boot
-	echo kernel $PREFIX"GNULinux/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
-	echo initrd $PREFIX"GNULinux/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
+	echo kernel $PREFIX"GNULinux/$system/`basename $dist`-$arch-linux $BOOT_OPTS" >> ipxe-boot
+	echo initrd $PREFIX"GNULinux/$system/`basename $dist`-$arch-initrd.gz" >> ipxe-boot
 	echo "boot" >> ipxe-boot
 	MENU="$MENU\nitem $system-`basename $dist`-$arch Install `echo $system | tr a-z A-Z` `basename $dist` $arch"
     done
@@ -77,10 +78,10 @@ echo "choose target && goto \${target}" >> ipxe-boot
 echo "# EOF" >> ipxe-boot
 
 # provide rescue symlinks
-if [ ! -e rescue-i386-linux ]; then ln -s stable-i386-linux rescue-i386-linux; fi
-if [ ! -e rescue-i386-initrd.gz ]; then ln -s stable-i386-initrd.gz rescue-i386-initrd.gz; fi
-if [ ! -e rescue-amd64-linux ]; then ln -s stable-amd64-linux rescue-amd64-linux; fi
-if [ ! -e rescue-amd64-initrd.gz ]; then ln -s stable-amd64-initrd.gz rescue-amd64-initrd.gz; fi
+if [ ! -e rescue-i386-linux ]; then ln -s debian/stable-i386-linux rescue-i386-linux; fi
+if [ ! -e rescue-i386-initrd.gz ]; then ln -s debian/stable-i386-initrd.gz rescue-i386-initrd.gz; fi
+if [ ! -e rescue-amd64-linux ]; then ln -s debian/stable-amd64-linux rescue-amd64-linux; fi
+if [ ! -e rescue-amd64-initrd.gz ]; then ln -s debian/stable-amd64-initrd.gz rescue-amd64-initrd.gz; fi
 
 
 

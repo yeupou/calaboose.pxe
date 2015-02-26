@@ -1,0 +1,8 @@
+#!/bin/bash
+# sample cronjob
+
+# you can export a prefix as follows if your are serving files also
+# with http (nginx for instance)
+#export PREFIX=http://server/pxe/
+
+/srv/pxe/ipxe-boot-update.sh

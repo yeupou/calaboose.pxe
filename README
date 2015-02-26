@@ -7,7 +7,7 @@ and advertised at http://yeupou.wordpress.com/2012/05/29/having-homemade-aliases
 To set this up:
 ---------------
 
-On the server (you have a home server, right? *plonk*), 
+On the server (you have a home server, right? *plonk*), assuming your network is 192.168.1.?
 
 Put this directory somewhere clever, like /srv/pxe for instance (yes, that's what I did; but you can put it in /opt/my/too/long/path/i/cannot/remember if you really really want).
 
@@ -59,7 +59,7 @@ Further...:
 -----------
 
 You can decide to use http instead of tftpd for faster file transfer once
- iPXE is loaded (which means tfpd will still be necessary tough).
+ iPXE is loaded (which means tfpd will still be necessary though).
 
 For instance, you can run 
     export PREFIX=http://URL/pxe/

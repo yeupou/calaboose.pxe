@@ -65,5 +65,4 @@ For instance, you can run
     export PREFIX=http://URL/pxe/
 before starting the ipxe-boot-update.sh script.
 
-
 # EOF

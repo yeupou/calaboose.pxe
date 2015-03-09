@@ -11,6 +11,8 @@ On the server (you have a home server, right? *plonk*), assuming your network is
 
 Put this directory somewhere clever, like /srv/pxe for instance (yes, that's what I did; but you can put it in /opt/my/too/long/path/i/cannot/remember if you really really want).
 
+(Note: if you are using a dpkg-based distribution, you can get this with apt-get instead of git. Read https://github.com/yeupou/stalag13 and get stalag13-utils-pxe)
+
 Run the ipxe-boot-update.sh main script. It will build up ipxe-boot config files and (by default) download GNULinux kernels and initrd.
 (It will run any additional ipxe-boot-update.sh that you may add in subdirectories. See the one in GNULinux as example)
 
@@ -59,10 +61,15 @@ Further...:
 -----------
 
 You can decide to use http instead of tftpd for faster file transfer once
- iPXE is loaded (which means tfpd will still be necessary though).
+ iPXE is loaded (which means tfpd will still be necessary though), assuming you have an http server like nginx running.
 
-For instance, you can run 
+With the default setup, you first need to add a symlink from /srv/pxe to /var/www/pxe 
+
+Then, for instance, you can run 
     export PREFIX=http://URL/pxe/
 before starting the ipxe-boot-update.sh script.
+
+(you should also edit /etc/cron.monthly/pxe accordingly)
+
 
 # EOF
